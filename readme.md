@@ -7,3 +7,11 @@ Here is a potential endpoint for [pulling all harvest sources](https://catalog.d
 
 
 Here is an endpoint example for [one harvest source](https://catalog.data.gov/api/3/action/package_search?q=harvest_source_id:55670d71-b811-4fef-9601-97ff5fcc4ae7).
+
+Here's the [CKAN API documentation](https://docs.ckan.org/en/ckan-2.3.5/api/index.html)
+
+
+### Requirements
+
+- Python 3.8
+- pipenv

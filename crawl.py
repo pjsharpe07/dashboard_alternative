@@ -3,15 +3,17 @@ import pandas as pd
 import json
 import sys
 import os
+#load api_key, though may not be necessary
 from dotenv import load_dotenv
 load_dotenv()
-#
-# this will be a 2 step process with the end goal to be a producable csv
+api_key = os.getenv('api_key')
+######################################
+# this will be a 2-step process (min) with the end goal to be a producable csv
 # 1) get a list of all harvest sources
 # 2) gather information from harvest source and create csv
 # 3) MAYBE: create visualization from data
+#####################################
 
-api_key = os.getenv('api_key')
 #step 1 - get all harvest sources
 def get_all_sources():
     try:
