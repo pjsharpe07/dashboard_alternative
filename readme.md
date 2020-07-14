@@ -38,3 +38,5 @@ To run the crawl: `pipenv run crawl.py`
 - **resource_urls** : 5 unique resource url's. Note, this is included because we can do more with these urls. Only 5 used for csv formatting
 
 - **average_openness** : If the dataset has a `qa` field, then this is the average of the `openness_score`. Otherwise is null.
+
+- **harvest_source_title**: Comes from the `extras` dictionary. This could be used for many other dashboard specific entities.

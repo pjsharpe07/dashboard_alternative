@@ -107,6 +107,19 @@ def process_dataset_info(harvest_source):
             extracted_harvest_info.append(np.mean(openness_score))
         else:
             extracted_harvest_info.append(np.nan)  # append null if not a value
+        # get harvest source title
+        # there can be several 'harvest_source_title' in extras
+        if 'extras' in harvest_source[0].keys():
+            # just get the extra dictionary
+            extras = harvest_source[0]['extras']
+            harvest_source_title = []
+            for i in range(len(extras)):
+                if extras[i]['key'] == 'harvest_source_title':
+                    harvest_source_title.append(extras[i]['value'])
+        # append no harvest title if not in extras
+        harvest_source_title.append('No harvest title')
+        # take either harvest source name or none
+        extracted_harvest_info.append(harvest_source_title[0])
         return extracted_harvest_info
     except TypeError:
         print('Got a type error, but it was handled')
@@ -133,7 +146,8 @@ def create_csv(number_to_process):
                                 'number_of_datasets',
                                 'resource_type(s)',
                                 'resource_urls',  # TODO: better CSV formatting
-                                'average_openness'])
+                                'average_openness',
+                                'harvest_source_title'])
 
         df.to_csv('crawl_results.csv', index=False)
         print('CSV created successsfully with {} rows.'.format(len(df)))
