@@ -3,16 +3,12 @@ import pandas as pd
 import json
 import sys
 import os
-#load api_key, though may not be necessary
-from dotenv import load_dotenv
-import numpy as np
-load_dotenv()
-api_key = os.getenv('api_key')
+
 ######################################
-# this will be a 2-step process (min) with the end goal to be a producable csv
+# this will be a 3-step process with the end goal to be a producable csv
 # 1) get a list of all harvest sources
-# 2) gather information from harvest source and create csv
-# 3) MAYBE: create visualization from data
+# 2) create json of harvest source
+# 3) process harvest.json data
 #####################################
 
 # TODO: add arguments
@@ -31,7 +27,6 @@ def get_all_sources(dataset_number):
             print('Getting {} harvest sources'.format(body['result']['count']))
             #response formatting is strange, but this is the list of all harvest sources
             harvest_sources = body['result']['results']
-            print('Using only the first {} harvest sources'.format(dataset_number))
             all_ids = []
             for i in range(0, dataset_number):
                 all_ids.append(harvest_sources[i]['id'])
@@ -40,9 +35,10 @@ def get_all_sources(dataset_number):
     except:
         print('Error getting harvest sources: {}'.format(sys.exc_info()))
 
+# step 2 - get harvest json
 def process_harvest_info(id):
     try:
-        #edit this number to declare the max amounts of harvest results to attempt with each request
+        #edit this number to declare the max amounts of dataset results to attempt with each request
         max_results = 10000
         #make request and process body as json
         base_url = 'https://catalog.data.gov/api/3/action/package_search?rows={}&q=harvest_source_id:{}'.format(max_results, id)
@@ -72,7 +68,6 @@ def process_harvest_info(id):
 def process_dataset_info(harvest_source):
     try:
         total_datasets = len(harvest_source)
-        # list to append to final df
         print('Processing {} total datasets'.format(total_datasets))
         # iterate through each dataset and get aggregated information
         resource_types = []
@@ -89,6 +84,7 @@ def process_dataset_info(harvest_source):
                     #the 'qa' field is being read as a string, if present at all
                     if 'qa' in resource.keys():
                         idx = resource['qa'].find("'openness_score':")
+                        #grab the score and make it an int
                         openness_score.append(int(resource['qa'][idx+18]))
         #append to our list
         # get initial info, then some others will be gathered via aggregation
@@ -111,7 +107,7 @@ def process_dataset_info(harvest_source):
         print('Got a type error, but it was handled')
         return None
 
-#parameter number_to_process should be defined as the most you want to produce
+#parameter number_to_process should be defined as the most harvest sources you want to produce
 def create_csv(number_to_process):
     try:
         # this will be the list with our final df
@@ -130,7 +126,7 @@ def create_csv(number_to_process):
                                 'availability',
                                 'number_of_datasets',
                                 'resource_type(s)',
-                                'resource_urls',
+                                'resource_urls', #TODO: see if this can be formatted better
                                 'average_openness'])
 
         df.to_csv('crawl_results.csv', index=False)
@@ -139,5 +135,5 @@ def create_csv(number_to_process):
         print('An error occurred. Error: {}'.format(sys.exc_info()))
 
 
-#create our df
-create_csv(10)
+#create our df, edit the number to process the number of datasets
+create_csv(100)
