@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import json
 import numpy as np
-
+from datetime import datetime
 ######################################
 # this will be a 3-step process with the end goal to be a producable csv
 # 1) get a list of all harvest sources
@@ -148,7 +148,8 @@ def create_csv(number_to_process):
                                 'resource_urls',  # TODO: better CSV formatting
                                 'average_openness',
                                 'harvest_source_title'])
-
+        # add today's date
+        df['last_crawl'] = datetime.now()
         df.to_csv('crawl_results.csv', index=False)
         print('CSV created successsfully with {} rows.'.format(len(df)))
     except Exception as e:
@@ -156,4 +157,4 @@ def create_csv(number_to_process):
 
 
 # create our df, edit the number to process the number of datasets
-create_csv(100)
+create_csv(150)

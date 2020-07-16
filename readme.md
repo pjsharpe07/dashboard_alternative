@@ -40,3 +40,5 @@ To run the crawl: `pipenv run crawl.py`
 - **average_openness** : If the dataset has a `qa` field, then this is the average of the `openness_score`. Otherwise is null.
 
 - **harvest_source_title**: Comes from the `extras` dictionary. This could be used for many other dashboard specific entities.
+
+- **last_crawl**: The date of the last crawl
